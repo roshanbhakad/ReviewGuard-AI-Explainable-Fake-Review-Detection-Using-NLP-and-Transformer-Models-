@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Model Arena & Benchmarks | ReviewGuard-AI{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <!-- Hero Banner -->
+    <div class="bg-gradient-to-r from-gray-900 via-gray-900/90 to-purple-950/40 p-6 rounded-2xl border border-gray-800 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-3">
+                <i class="fa-solid fa-trophy text-amber-400"></i>
+                Model Arena & Benchmark Leaderboard
+            </h1>
+            <p class="text-sm text-gray-400 mt-1 max-w-2xl">
+                Rigorous empirical evaluation on held-out test corpora comparing the Deep Transformer Encoder against classical and gradient-boosted ML architectures.
+            </p>
+        </div>
+        <div class="flex items-center gap-2">
+            <span class="text-xs px-3 py-1.5 rounded-xl bg-purple-500/10 text-purple-300 border border-purple-500/30 font-semibold flex items-center gap-1.5">
+                <i class="fa-solid fa-microchip"></i>
+                640 Test Samples Evaluated
+            </span>
+        </div>
+    </div>
+
+    <!-- Leaderboard Table Card -->
+    <div class="bg-gray-900/90 rounded-2xl border border-gray-800 shadow-lg overflow-hidden">
+        <div class="p-5 border-b border-gray-800 flex items-center justify-between">
+            <h2 class="text-base font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-ranking-star text-brand-400"></i>
+                Held-Out Benchmark Leaderboard
+            </h2>
+            <span class="text-xs text-gray-500">Stratified 80/20 Train-Test Split (Seed: 42)</span>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+                <thead class="bg-gray-950/70 text-gray-400 uppercase tracking-wider text-xs border-b border-gray-800">
+                    <tr>
+                        <th class="py-3.5 px-6">Rank & Model</th>
+                        <th class="py-3.5 px-6">Accuracy</th>
+                        <th class="py-3.5 px-6">Precision</th>
+                        <th class="py-3.5 px-6">Recall</th>
+                        <th class="py-3.5 px-6">F1-Score</th>
+                        <th class="py-3.5 px-6">ROC-AUC</th>
+                        <th class="py-3.5 px-6">Type</th>
+                    </tr>
+                </thead>
+                <tbody id="benchmark-table-body" class="divide-y divide-gray-800">
+                    <!-- Loaded dynamically via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Benchmark Chart & Architecture Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- Chart (7 Cols) -->
+        <div class="lg:col-span-7 bg-gray-900/90 p-6 rounded-2xl border border-gray-800 shadow-lg space-y-4">
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-chart-line text-brand-400"></i>
+                F1-Score & ROC-AUC Metric Comparison
+            </h3>
+            <div class="h-64">
+                <canvas id="benchmark-chart"></canvas>
+            </div>
+        </div>
+
+        <!-- Architecture Breakdown (5 Cols) -->
+        <div class="lg:col-span-5 bg-gray-900/90 p-6 rounded-2xl border border-gray-800 shadow-lg space-y-4">
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-cubes text-brand-400"></i>
+                ReviewGuard Architecture Specs
+            </h3>
+            <div class="space-y-3 text-xs text-gray-300">
+                <div class="p-3 bg-gray-950/70 rounded-xl border border-gray-800">
+                    <span class="font-bold text-brand-400 block mb-1">1. Multi-Head Self-Attention Transformer</span>
+                    <p class="text-gray-400">4 Attention Heads, 64-dim Positional Embeddings, 128-dim Feed-Forward with LayerNorm and Attention matrix extraction.</p>
+                </div>
+                <div class="p-3 bg-gray-950/70 rounded-xl border border-gray-800">
+                    <span class="font-bold text-emerald-400 block mb-1">2. Hybrid Stylometric + Gradient Boosted Trees</span>
+                    <p class="text-gray-400">3,000 TF-IDF word & bi-gram features coupled with 20 normalized stylometric and sentiment dissonance metrics.</p>
+                </div>
+                <div class="p-3 bg-gray-950/70 rounded-xl border border-gray-800">
+                    <span class="font-bold text-purple-400 block mb-1">3. Soft-Voting Meta-Ensemble</span>
+                    <p class="text-gray-400">Weighted consensus combining Transformer attention probability (45%), XGBoost trees (35%), and heuristic dissonance (10%).</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Hugging Face Integration Card -->
+    <div class="bg-gray-900/90 p-6 rounded-2xl border border-gray-800 shadow-lg flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="space-y-2">
+            <div class="flex items-center gap-2">
+                <span class="text-lg font-bold text-white">Hugging Face Transformers Extension</span>
+                <span id="hf-status-pill" class="text-xs px-2.5 py-0.5 rounded-full font-semibold bg-gray-800 text-gray-400 border border-gray-700">Checking...</span>
+            </div>
+            <p class="text-xs text-gray-400 max-w-2xl">
+                ReviewGuard-AI includes native integration for pre-trained Hugging Face checkpoints (<code>roberta-base</code>, <code>microsoft/deberta-v3-base</code>, <code>distilbert-base-uncased</code>).
+            </p>
+        </div>
+        <div class="bg-gray-950 p-3 rounded-xl border border-gray-800 font-mono text-xs text-brand-300 select-all">
+            pip install transformers torch
+        </div>
+    </div>
+
+</div>
+{% endblock %}

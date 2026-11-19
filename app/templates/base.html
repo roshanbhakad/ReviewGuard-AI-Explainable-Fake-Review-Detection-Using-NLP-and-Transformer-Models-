@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ReviewGuard-AI | Explainable Fake Review Detection{% endblock %}</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#1e1b4b',
+                        },
+                        darkbg: '#0B0F19',
+                        cardbg: '#111827',
+                        cardborder: '#1F2937',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="bg-darkbg text-gray-100 min-h-screen flex flex-col font-sans selection:bg-brand-500 selection:text-white">
+
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-darkbg/90 border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="/" class="flex items-center space-x-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 via-indigo-500 to-emerald-400 flex items-center justify-center shadow-lg shadow-brand-500/20 group-hover:scale-105 transition-transform duration-200">
+                    <i class="fa-solid fa-shield-halved text-white text-lg"></i>
+                </div>
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-gray-200 to-brand-400 bg-clip-text text-transparent">ReviewGuard</span>
+                        <span class="text-xs font-semibold px-1.5 py-0.5 rounded bg-brand-500/20 text-brand-400 border border-brand-500/30">AI 2.0</span>
+                    </div>
+                    <p class="text-[10px] text-gray-400 font-medium tracking-wide">Explainable Fake Review Intelligence</p>
+                </div>
+            </a>
+
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center space-x-1 lg:space-x-2">
+                <a href="/" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors {% if active_page == 'inspector' %}bg-gray-800 text-brand-400 border border-gray-700{% else %}text-gray-300 hover:text-white hover:bg-gray-800/60{% endif %}">
+                    <i class="fa-solid fa-magnifying-glass-chart mr-1.5"></i>Review Inspector
+                </a>
+                <a href="/batch" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors {% if active_page == 'batch' %}bg-gray-800 text-brand-400 border border-gray-700{% else %}text-gray-300 hover:text-white hover:bg-gray-800/60{% endif %}">
+                    <i class="fa-solid fa-layer-group mr-1.5"></i>Batch Auditor
+                </a>
+                <a href="/benchmark" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors {% if active_page == 'benchmark' %}bg-gray-800 text-brand-400 border border-gray-700{% else %}text-gray-300 hover:text-white hover:bg-gray-800/60{% endif %}">
+                    <i class="fa-solid fa-trophy mr-1.5"></i>Model Arena
+                </a>
+                <a href="/xai" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors {% if active_page == 'xai' %}bg-gray-800 text-brand-400 border border-gray-700{% else %}text-gray-300 hover:text-white hover:bg-gray-800/60{% endif %}">
+                    <i class="fa-solid fa-brain mr-1.5"></i>XAI Lab
+                </a>
+                <a href="/api-docs" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors {% if active_page == 'api_docs' %}bg-gray-800 text-brand-400 border border-gray-700{% else %}text-gray-300 hover:text-white hover:bg-gray-800/60{% endif %}">
+                    <i class="fa-solid fa-code mr-1.5"></i>API Docs
+                </a>
+            </nav>
+
+            <!-- Status Indicator & Github -->
+            <div class="flex items-center space-x-3">
+                <div class="hidden sm:flex items-center px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse mr-2"></span>
+                    Ensemble Engine Online
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800/80 bg-gray-950/60 py-6 mt-12 text-center text-xs text-gray-500">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-shield-halved text-brand-400"></i>
+                <span class="font-semibold text-gray-400">ReviewGuard-AI</span>
+                <span>— Explainable Fake Review Detection Using NLP & Transformers</span>
+            </div>
+            <div class="flex items-center space-x-4 text-gray-400">
+                <a href="/" class="hover:text-white transition-colors">Inspector</a>
+                <a href="/batch" class="hover:text-white transition-colors">Batch Audit</a>
+                <a href="/benchmark" class="hover:text-white transition-colors">Benchmarks</a>
+                <a href="/xai" class="hover:text-white transition-colors">Explainability</a>
+                <a href="/api-docs" class="hover:text-white transition-colors">REST API</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Core Scripts -->
+    <script src="/static/js/visualizer.js"></script>
+    <script src="/static/js/dashboard.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

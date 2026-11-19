@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}XAI Lab | ReviewGuard-AI{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <!-- Hero Banner -->
+    <div class="bg-gradient-to-r from-gray-900 via-gray-900/90 to-emerald-950/40 p-6 rounded-2xl border border-gray-800 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-3">
+                <i class="fa-solid fa-brain text-emerald-400"></i>
+                Explainable AI (XAI) Deep Dive Lab
+            </h1>
+            <p class="text-sm text-gray-400 mt-1 max-w-2xl">
+                Demystifying black-box NLP predictions. Learn how ReviewGuard-AI deconstructs deceptive reviews through Multi-Head Self-Attention, input-gradient token saliency, stylometrics, and sentiment dissonance.
+            </p>
+        </div>
+        <a href="/" class="text-sm px-4 py-2.5 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 font-semibold transition-colors flex items-center gap-2">
+            <i class="fa-solid fa-arrow-left"></i>
+            Test on Live Review
+        </a>
+    </div>
+
+    <!-- 3 Pillars of Explainability Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- Pillar 1: Transformer Self-Attention & Saliency -->
+        <div class="bg-gray-900/90 p-6 rounded-2xl border border-gray-800 shadow-lg space-y-4">
+            <div class="w-12 h-12 rounded-xl bg-brand-500/10 text-brand-400 border border-brand-500/20 flex items-center justify-center text-xl">
+                <i class="fa-solid fa-network-wired"></i>
+            </div>
+            <h2 class="text-lg font-bold text-white">1. Multi-Head Attention & Saliency</h2>
+            <p class="text-xs text-gray-300 leading-relaxed">
+                Computes dot-product attention across multiple attention heads:
+                <br>
+                <code class="text-brand-300 bg-gray-950 px-1.5 py-0.5 rounded text-[11px]">Attention(Q,K,V) = softmax(QKᵀ / √d_k) V</code>
+                <br><br>
+                Token saliency is derived via the gradient of the deceptive logit with respect to token embeddings:
+                <br>
+                <code class="text-brand-300 bg-gray-950 px-1.5 py-0.5 rounded text-[11px]">Saliency(w_i) = w_i · ∇_{w_i} L(fake)</code>
+            </p>
+            <div class="pt-2 text-xs text-gray-400 border-t border-gray-800">
+                Identifies promotional keywords, hyperbolic triggers, and unnatural repetitions.
+            </div>
+        </div>
+
+        <!-- Pillar 2: Stylometrics & Readability -->
+        <div class="bg-gray-900/90 p-6 rounded-2xl border border-gray-800 shadow-lg space-y-4">
+            <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center text-xl">
+                <i class="fa-solid fa-chart-pie"></i>
+            </div>
+            <h2 class="text-lg font-bold text-white">2. Stylometric Fingerprinting</h2>
+            <p class="text-xs text-gray-300 leading-relaxed">
+                Empirically grounded in deceptive opinion spam research (Ott et al. 2011). Extracts 20 quantitative linguistic dimensions:
+            </p>
+            <ul class="text-xs text-gray-400 space-y-1.5 list-disc list-inside">
+                <li><strong class="text-gray-200">Exclamation Density:</strong> Inflation of artificial hype.</li>
+                <li><strong class="text-gray-200">All-Caps Word Ratio:</strong> Urgency engineering.</li>
+                <li><strong class="text-gray-200">First-Person Pronouns:</strong> Feigned personal presence.</li>
+                <li><strong class="text-gray-200">Type-Token Ratio (TTR):</strong> Lexical repetitiveness.</li>
+                <li><strong class="text-gray-200">Flesch Reading Ease:</strong> Syntactic formulaicity.</li>
+            </ul>
+        </div>
+
+        <!-- Pillar 3: Sentiment Dissonance -->
+        <div class="bg-gray-900/90 p-6 rounded-2xl border border-gray-800 shadow-lg space-y-4">
+            <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20 flex items-center justify-center text-xl">
+                <i class="fa-solid fa-yin-yang"></i>
+            </div>
+            <h2 class="text-lg font-bold text-white">3. Sentiment-Rating Dissonance</h2>
+            <p class="text-xs text-gray-300 leading-relaxed">
+                Evaluates structural coherence between stated customer star rating and lexical sentiment valence:
+                <br>
+                <code class="text-purple-300 bg-gray-950 px-1.5 py-0.5 rounded text-[11px]">Dissonance = |Polarity - (Rating - 3.0)/2.0|</code>
+            </p>
+            <p class="text-xs text-gray-400">
+                Immediately flags click-farm bot inversion bugs, review bombing campaigns, and sarcastic counterfeit reviews.
+            </p>
+        </div>
+
+    </div>
+
+    <!-- Interactive Decision Threshold Simulator -->
+    <div class="bg-gray-900/90 p-6 rounded-2xl border border-gray-800 shadow-lg space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-gray-800 pb-3">
+            <div>
+                <h2 class="text-base font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-brand-400"></i>
+                    Decision Boundary & Policy Sensitivity Simulator
+                </h2>
+                <p class="text-xs text-gray-400">
+                    Adjust the fraud classification threshold to balance Precision (avoiding false positives) vs Recall (catching maximum spam).
+                </p>
+            </div>
+            <div class="text-right">
+                <span class="text-xs text-gray-400 uppercase tracking-wider block">Current Threshold:</span>
+                <span id="threshold-val-display" class="text-lg font-bold text-brand-400">0.50</span>
+            </div>
+        </div>
+
+        <div class="space-y-3">
+            <input type="range" id="threshold-slider" min="0.10" max="0.90" step="0.05" value="0.50" oninput="updateThreshold(this.value)" class="w-full accent-brand-500 cursor-pointer">
+            <div class="flex justify-between text-xs text-gray-500 font-mono">
+                <span>0.10 (High Sensitivity / Max Recall)</span>
+                <span>0.50 (Balanced Ensemble Default)</span>
+                <span>0.90 (High Specificity / Conservative)</span>
+            </div>
+        </div>
+
+        <div id="threshold-policy-note" class="p-3 bg-gray-950 rounded-xl border border-gray-800 text-xs text-gray-300">
+            <strong>Standard Balanced Policy (0.50):</strong> Optimal F1-score balance. Reviews with probability >= 0.50 are categorized as Suspicious or Deceptive.
+        </div>
+    </div>
+
+</div>
+{% endblock %}

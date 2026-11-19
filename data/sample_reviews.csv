@@ -1,0 +1,13 @@
+review_text,rating,category,expected_label
+"BEST PRODUCT EVERRRR!!!! Absolutely blown away by the quality!! Changed my life forever!! MUST BUY 100% recommended to everyone!! A++++++ service!!!",5,Electronics,Fake
+"I've been using this wireless earbuds for about 6 months. The sound stage is solid and ANC noise cancellation works as expected. However, the companion mobile app could be improved. Overall decent value for $79.",4,Electronics,Genuine
+"DO NOT BUY!!! TOTAL SCAM!! Broke in 5 seconds!! Garbage trash worthless junk!! Worst company on planet earth!! RUN AWAY SCAM SCAM SCAM!!",1,Electronics,Fake
+"Battery life on this smartwatch lasts roughly 18 hours of continuous use. Build quality feels sturdy with a matte finish. Minor gripe: the power cable is only 3 feet long. Would rate 4/5.",4,Electronics,Genuine
+"Completely broken on arrival, total disaster and useless waste of money. Worst thing ever.",5,Electronics,Fake
+"We purchased this air fryer for daily meal prep. Cuts prep time in half and dishwasher cleaning is straightforward. The lid latch requires a firm press to seal properly.",4,Home & Kitchen,Genuine
+"DO YOURSELF A FAVOR AND BUY THIS RIGHT NOW!!! Hands down the greatest purchase I have ever made in my entire life!! Miracle product, five stars all the way!!",5,Home & Kitchen,Fake
+"Sole separated from the toe box after 4 weeks of light walking on paved sidewalks. Material feels thin compared to older models from this brand.",1,Apparel,Genuine
+"Free sample provided for my honest review! Wow unbelievable quality, definitely worth every single penny, click the link to get your discount code!!",5,Apparel,Fake
+"Fabric is 95% cotton and 5% elastane. Fits true to size around the chest (I am 6'0, 180 lbs, wearing Large). Shrunk slightly after first wash in warm water.",4,Apparel,Genuine
+"Nice product. Very nice quality. Very very good. Recommend this product to all buyers.",5,General,Fake
+"Thoroughly researched 340-page guide with clear diagrams and real-world case studies in chapters 4 and 7. The index at the back makes quick reference simple.",5,Books,Genuine

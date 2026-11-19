@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}API Documentation & Console | ReviewGuard-AI{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <!-- Hero Banner -->
+    <div class="bg-gradient-to-r from-gray-900 via-gray-900/90 to-blue-950/40 p-6 rounded-2xl border border-gray-800 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-3">
+                <i class="fa-solid fa-code text-blue-400"></i>
+                REST API Documentation & Interactive Console
+            </h1>
+            <p class="text-sm text-gray-400 mt-1 max-w-2xl">
+                Integrate ReviewGuard-AI into e-commerce pipelines, fraud moderation queues, or browser extensions with high-performance JSON endpoints.
+            </p>
+        </div>
+        <div class="flex items-center gap-2">
+            <span class="text-xs px-3 py-1 rounded-full bg-blue-500/10 text-blue-300 border border-blue-500/20 font-mono">
+                Base: http://127.0.0.1:5000/api
+            </span>
+        </div>
+    </div>
+
+    <!-- Interactive API Playground Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- Endpoint Selector & Request Console (6 Cols) -->
+        <div class="lg:col-span-6 bg-gray-900/90 p-6 rounded-2xl border border-gray-800 shadow-lg space-y-4">
+            <h2 class="text-base font-bold text-white flex items-center gap-2 border-b border-gray-800 pb-3">
+                <i class="fa-solid fa-terminal text-brand-400"></i>
+                Interactive Request Console
+            </h2>
+
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">Target Endpoint</label>
+                    <select id="api-endpoint-select" onchange="updateApiPresetPayload(this.value)" class="w-full bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs font-mono text-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        <option value="/api/v1/explain">POST /api/v1/explain (Full Explainability & Saliency)</option>
+                        <option value="/api/v1/predict">POST /api/v1/predict (Quick Probability & Risk)</option>
+                        <option value="/api/v1/batch">POST /api/v1/batch (Batch Review Audit)</option>
+                        <option value="/api/v1/models">GET /api/v1/models (Benchmark Metrics & Status)</option>
+                        <option value="/api/v1/samples">GET /api/v1/samples (Pre-loaded Samples)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">JSON Request Body</label>
+                    <textarea id="api-request-body" rows="8" class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3 text-xs font-mono text-emerald-400 focus:outline-none focus:ring-2 focus:ring-brand-500 leading-relaxed">{
+  "text": "BEST PRODUCT EVERRRR!!!! Changed my life, must buy 100% recommended!!",
+  "rating": 5.0
+}</textarea>
+                </div>
+
+                <button type="button" onclick="sendApiConsoleRequest()" id="api-send-btn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2.5 px-4 rounded-xl shadow-md transition-colors flex items-center justify-center gap-2 text-xs">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span>Send API Request</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Live Response Output (6 Cols) -->
+        <div class="lg:col-span-6 bg-gray-900/90 p-6 rounded-2xl border border-gray-800 shadow-lg space-y-4 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+                    <h2 class="text-base font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-reply text-emerald-400"></i>
+                        API Response Body
+                    </h2>
+                    <span id="api-status-badge" class="text-xs px-2 py-0.5 rounded font-mono bg-gray-800 text-gray-400">Status: Idle</span>
+                </div>
+                <div class="mt-3">
+                    <pre id="api-response-output" class="bg-gray-950 p-4 rounded-xl border border-gray-800 text-xs font-mono text-gray-300 max-h-96 overflow-y-auto leading-relaxed">// Response JSON will appear here after clicking 'Send API Request'...</pre>
+                </div>
+            </div>
+
+            <!-- cURL snippet -->
+            <div class="pt-3 border-t border-gray-800">
+                <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider block mb-1">Equivalent cURL:</span>
+                <div class="bg-gray-950 p-2.5 rounded-lg border border-gray-800 text-[11px] font-mono text-gray-300 overflow-x-auto select-all" id="curl-snippet">
+                    curl -X POST http://127.0.0.1:5000/api/v1/explain -H "Content-Type: application/json" -d "{\"text\":\"BEST PRODUCT EVER!!\",\"rating\":5.0}"
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Endpoint Reference Table -->
+    <div class="bg-gray-900/90 rounded-2xl border border-gray-800 shadow-lg p-6 space-y-4">
+        <h2 class="text-base font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-book text-brand-400"></i>
+            API Reference Specification
+        </h2>
+        <div class="overflow-x-auto text-xs">
+            <table class="w-full text-left divide-y divide-gray-800">
+                <thead class="text-gray-400 uppercase tracking-wider text-[11px]">
+                    <tr>
+                        <th class="py-2.5 px-4">Method & Path</th>
+                        <th class="py-2.5 px-4">Parameters</th>
+                        <th class="py-2.5 px-4">Description</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-800/80 text-gray-300">
+                    <tr>
+                        <td class="py-3 px-4 font-mono font-bold text-emerald-400">POST /api/v1/explain</td>
+                        <td class="py-3 px-4 font-mono text-gray-400">{ text: str, rating?: float }</td>
+                        <td class="py-3 px-4">Returns complete XAI breakdown, token saliency, radar comparison, and natural language diagnostic report.</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-4 font-mono font-bold text-blue-400">POST /api/v1/predict</td>
+                        <td class="py-3 px-4 font-mono text-gray-400">{ text: str, rating?: float }</td>
+                        <td class="py-3 px-4">Fast probability score, risk category badge, and model consensus.</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-4 font-mono font-bold text-purple-400">POST /api/v1/batch</td>
+                        <td class="py-3 px-4 font-mono text-gray-400">{ reviews: [{text, rating}] } or CSV file</td>
+                        <td class="py-3 px-4">Audits up to 200 reviews concurrently with aggregated spam KPIs and breakdown.</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-4 font-mono font-bold text-amber-400">GET /api/v1/models</td>
+                        <td class="py-3 px-4 font-mono text-gray-400">None</td>
+                        <td class="py-3 px-4">Returns performance metrics (F1, Accuracy, ROC-AUC) across all evaluated architectures.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}Batch Review Auditor | ReviewGuard-AI{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <!-- Hero Banner -->
+    <div class="bg-gradient-to-r from-gray-900 via-gray-900/90 to-indigo-950/40 p-6 rounded-2xl border border-gray-800 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-3">
+                <i class="fa-solid fa-layer-group text-brand-400"></i>
+                Batch Review Auditor
+            </h1>
+            <p class="text-sm text-gray-400 mt-1 max-w-2xl">
+                Audit complete e-commerce product feeds, seller catalogs, or multi-review datasets. Upload a CSV file or paste multiple reviews to detect coordinated bot spam bursts and fake review clusters.
+            </p>
+        </div>
+        <button type="button" onclick="loadSampleCsvBatch()" class="text-sm px-4 py-2.5 rounded-xl bg-brand-600/20 hover:bg-brand-600/30 text-brand-300 border border-brand-500/40 transition-all font-semibold flex items-center gap-2">
+            <i class="fa-solid fa-file-csv"></i>
+            Load Sample CSV (12 Reviews)
+        </button>
+    </div>
+
+    <!-- Upload and Input Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- File Upload Card (6 cols) -->
+        <div class="lg:col-span-6 bg-gray-900/80 p-6 rounded-2xl border border-gray-800 shadow-lg space-y-4">
+            <h2 class="text-base font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-cloud-arrow-up text-brand-400"></i>
+                Option 1: Upload CSV Dataset
+            </h2>
+            <div id="drop-zone" class="border-2 border-dashed border-gray-700 hover:border-brand-500 rounded-xl p-8 text-center cursor-pointer transition-colors bg-gray-950/60 flex flex-col items-center justify-center space-y-3">
+                <i class="fa-solid fa-file-csv text-4xl text-gray-500"></i>
+                <div class="text-sm text-gray-300">
+                    <span class="font-semibold text-brand-400">Click to browse</span> or drag and drop your CSV file here
+                </div>
+                <p class="text-xs text-gray-500">Supported columns: <code>review_text</code>, <code>rating</code> (optional)</p>
+                <input type="file" id="batch-file-input" accept=".csv" class="hidden">
+            </div>
+            <div id="file-name-display" class="text-xs text-brand-300 hidden font-mono"></div>
+            <button type="button" id="upload-audit-btn" onclick="submitBatchFile()" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-semibold py-2.5 px-4 rounded-xl shadow-md transition-colors flex items-center justify-center gap-2">
+                <i class="fa-solid fa-play"></i>
+                <span>Audit Uploaded CSV</span>
+            </button>
+        </div>
+
+        <!-- Direct Multi-line Paste Card (6 cols) -->
+        <div class="lg:col-span-6 bg-gray-900/80 p-6 rounded-2xl border border-gray-800 shadow-lg space-y-4">
+            <h2 class="text-base font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-paste text-brand-400"></i>
+                Option 2: Paste Multiple Reviews
+            </h2>
+            <textarea id="batch-paste-textarea" rows="5" placeholder="Enter one review per line (e.g.&#10;BEST PRODUCT EVERRR!! 100% recommend!&#10;Battery lasts around 24 hours, decent build quality.&#10;Total scam broke in 5 seconds!)"
+                class="w-full bg-gray-950/80 border border-gray-700 rounded-xl px-4 py-3 text-gray-100 placeholder-gray-500 text-xs focus:outline-none focus:ring-2 focus:ring-brand-500 font-sans"></textarea>
+            <button type="button" onclick="submitBatchPastedText()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 px-4 rounded-xl shadow-md transition-colors flex items-center justify-center gap-2">
+                <i class="fa-solid fa-play"></i>
+                <span>Audit Pasted Reviews</span>
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Live Batch Results Container -->
+    <div id="batch-results-container" class="space-y-6 hidden">
+
+        <!-- Summary KPI Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-gray-900/90 p-5 rounded-2xl border border-gray-800 shadow-md">
+                <span class="text-xs font-medium text-gray-400 uppercase tracking-wider">Total Reviews</span>
+                <div id="batch-kpi-total" class="text-2xl font-extrabold text-white mt-1">0</div>
+                <span class="text-xs text-gray-500">Processed in this batch</span>
+            </div>
+            <div class="bg-gray-900/90 p-5 rounded-2xl border border-gray-800 shadow-md">
+                <span class="text-xs font-medium text-gray-400 uppercase tracking-wider">Flagged Deceptive</span>
+                <div id="batch-kpi-flagged" class="text-2xl font-extrabold text-red-400 mt-1">0</div>
+                <span id="batch-kpi-percent" class="text-xs text-red-400 font-medium">0% fake rate</span>
+            </div>
+            <div class="bg-gray-900/90 p-5 rounded-2xl border border-gray-800 shadow-md">
+                <span class="text-xs font-medium text-gray-400 uppercase tracking-wider">Authentic Reviews</span>
+                <div id="batch-kpi-authentic" class="text-2xl font-extrabold text-emerald-400 mt-1">0</div>
+                <span class="text-xs text-gray-500">Clean natural feedback</span>
+            </div>
+            <div class="bg-gray-900/90 p-5 rounded-2xl border border-gray-800 shadow-md">
+                <span class="text-xs font-medium text-gray-400 uppercase tracking-wider">Average Fraud Score</span>
+                <div id="batch-kpi-avg-score" class="text-2xl font-extrabold text-indigo-400 mt-1">0.00</div>
+                <span class="text-xs text-gray-500">Scale 0.00 - 1.00</span>
+            </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div class="lg:col-span-8 bg-gray-900/90 p-6 rounded-2xl border border-gray-800 shadow-lg">
+                <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-chart-column text-brand-400"></i>
+                    Star Rating vs Fake Probability Distribution
+                </h3>
+                <div class="h-64">
+                    <canvas id="batch-distribution-chart"></canvas>
+                </div>
+            </div>
+            <div class="lg:col-span-4 bg-gray-900/90 p-6 rounded-2xl border border-gray-800 shadow-lg flex flex-col justify-between">
+                <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-chart-pie text-brand-400"></i>
+                    Risk Categorization
+                </h3>
+                <div class="h-56 relative flex items-center justify-center">
+                    <canvas id="batch-pie-chart"></canvas>
+                </div>
+                <div class="text-center text-xs text-gray-400 mt-2">
+                    Ensemble classification breakdown
+                </div>
+            </div>
+        </div>
+
+        <!-- Audit Table Container -->
+        <div class="bg-gray-900/90 rounded-2xl border border-gray-800 shadow-lg overflow-hidden">
+            <div class="p-5 border-b border-gray-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h3 class="text-base font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-brand-400"></i>
+                        Detailed Audit Records
+                    </h3>
+                    <p class="text-xs text-gray-400">Review-by-review audit results and anomaly flags.</p>
+                </div>
+                <!-- Export CSV Button -->
+                <button type="button" onclick="exportBatchResultsCsv()" class="text-xs px-3.5 py-2 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 font-semibold transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-download"></i>
+                    Export Audit CSV
+                </button>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-gray-950/70 text-gray-400 uppercase tracking-wider text-[11px] border-b border-gray-800">
+                        <tr>
+                            <th class="py-3 px-4">#</th>
+                            <th class="py-3 px-4">Review Content</th>
+                            <th class="py-3 px-4">Rating</th>
+                            <th class="py-3 px-4">Fake Probability</th>
+                            <th class="py-3 px-4">Risk Level</th>
+                            <th class="py-3 px-4">Flags</th>
+                            <th class="py-3 px-4">Dissonance</th>
+                        </tr>
+                    </thead>
+                    <tbody id="batch-table-body" class="divide-y divide-gray-800 text-gray-300">
+                        <!-- Injected via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}
